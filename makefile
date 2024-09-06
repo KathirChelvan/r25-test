@@ -1,29 +1,41 @@
-CC =gcc
-CFLAGS = -Og -g -Wall
+# Compiler and flags
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c11
 
-all: quine-gen
+# Directories
+SRC_DIR = src
+LIB_DIR = lib
+BUILD_DIR = build
 
-build:
-	gcc src/*.c lib/*.c -Iinclude -lm -o main.exe
-check:
-	@echo "--------------------------------------------"
-	@echo "Checking..."
-	@echo "Test-1: "
-	./main.exe test/sbus_data\[1\] test/sab_data[1]
-	diff test/sab_data[1] test/expected[1]
-	@echo "Test-2: "
-	./main.exe test/sbus_data\[2\] test/sab_data[2]
-	diff test/sab_data[2] test/expected[2]
-	@echo "Test-3: "
-	./main.exe test/sbus_data\[3\] test/sab_data[3]
-	diff test/sab_data[3] test/expected[3]
-	@echo "**** Success: ***"
-	@echo "--------------------------------------------"
+# Source files
+SRCS = $(SRC_DIR)/main.c $(LIB_DIR)/parsing.c
 
+# Object files
+OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
 
+# Target executable
+TARGET = rover_control
+
+# Create build directory if it doesn't exist
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+# Rule to build the executable
+all: $(BUILD_DIR) $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS)
+
+# Rule to compile source files into object files
+$(BUILD_DIR)/%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Clean rule to remove build artifacts
 clean:
-	rm -f test/sab_data[1]
-	rm -f test/sab_data[2]
-	rm -f test/sab_data[3]
+	rm -rf $(BUILD_DIR) $(TARGET)
 
-.PHONY: clean check
+# Rule to check if the code is implemented correctly
+check: $(TARGET)
+	./$(TARGET) # Add any specific test commands if needed
+
+.PHONY: all clean check
