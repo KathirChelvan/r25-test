@@ -46,11 +46,36 @@ If you are able to compile your code successfully you should see something like 
 ## Understanding
 Describe what you understood about the problem.
 
+I need to control a Sabertooth 2x60 motor driver using data from an RC transmitter, which is received by an SBUS receiver. The RC transmitter sends channel values that range from 0 to 2047, but the Sabertooth motor driver expects PWM values in the range of 0 to 254. My goal is to read the data from the SBUS receiver, convert these values to the correct PWM range, and then send these values to the motor driver to control the motor.
+
 ## Thought Process
-After understanding the problem, describe how you decided to proceed towards solving the question.
+After understanding the problem, describe how you decided to proceed towards solving the question\
+
+I need to control a Sabertooth 2x60 motor driver using data from an RC transmitter, which is received by an SBUS receiver. The RC transmitter sends channel values that range from 0 to 2047, but the Sabertooth motor driver expects PWM values in the range of 0 to 254. My goal is to read the data from the SBUS receiver, convert these values to the correct PWM range, and then send these values to the motor driver to control the motor.
 
 ## Implementation
 How did you decide to implement your solution.
+Data Conversion Needs: I recognized that the main challenge is converting the 0-2047 range of the RC transmitter data to the 0-254 range needed by the Sabertooth motor driver.
+
+1.Interpolation Function:
+I implemented a function to scale the RC values (0-2047) to the PWM range (0-254)
+
+2.Main Program:
+I read the SBUS data and parsed the channel values.
+Applied the interpolation function to convert the channel values to PWM.
+Sent the PWM values to the Sabertooth motor driver.
+
+3.Testing:
+
+Compiled the code with make build.
+Ran the program with make check to ensure the motor responds correctly to changes in the RC transmitter input.
+Verified that the motor driver received and correctly interpreted the PWM signals.
+By following this approach, I ensured that the RC data is accurately converted and used to control the motor driver as intended.
+
+
+
+
+
 
 Mention the details, such as the scaling used in the interpolation and how you tested it.
 
